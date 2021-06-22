@@ -15,12 +15,13 @@ background-color: ${props => (
 // Draggable's child should be a function ()=>{}
 export default class Task extends React.Component {
     render(){
-        console.log(this.props.index, this.props.task)
+        const {task} = this.props
+        const taskDragId = task.id.toString()
         const isDragDisabled = this.props.task.id ==='task-1';
+
         return (
-            
             <Draggable 
-                draggableId={this.props.task.id} 
+                draggableId={taskDragId} 
                 index={this.props.index}
                 isDragDisabled={isDragDisabled}
             >
@@ -32,7 +33,7 @@ export default class Task extends React.Component {
                         isDragging={snapshot.isDragging}
                         isDragDisabled={isDragDisabled}
                         >
-                          {this.props.task.content}
+                          {task.content}
                     </Container>
                 )}
             </Draggable>
