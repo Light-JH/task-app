@@ -10,20 +10,17 @@ const initialData = {
         'column-1': {
             id: 'column-1',
             title:'To do',
-            taskIds:['task-1','task-2', 'task-3', 'task-4'],
-            columnOrder: 0 
+            taskIds:['60d23705d9b493c393b6072b','60d23705d9b493c393b6072c', '60d23705d9b493c393b6072d', '60d23705d9b493c393b6072e'],
         },
         'column-2': {
             id: 'column-2',
             title:'In progress',
             taskIds:[],
-            columnOrder: 1,
         },
         'column-3': {
             id: 'column-3',
             title:'Done',
             taskIds:[],
-            columnOrder: 2,
         },
     },
 

@@ -22,12 +22,12 @@ class App extends Component {
         for(const task of response.data) {
           tasks[task.id] = task
         }
+        console.log(tasks)
 
         this.setState({
           ...this.state,
           tasks: tasks
         })
-
         this.getColumns()
       },
       error => {
@@ -40,33 +40,37 @@ class App extends Component {
     axios.get('http://localhost:5000/api/columns').then(
       response => {
         const columns = {}
-        const columnOrder = []
-        const {tasks} = this.state
-        // get coumn from database and setup column states 
-        for(const column of response.data){
-          column.taskIds=[]
-          columns[column.id] = column// map key to value 
-          columnOrder[column.columnOrder] = column.id// put column.id 
-        }
-        // setup task.id in taskIds
-        for(const taskId in tasks) {
-          const task = tasks[taskId]
-          columns[task.columnId].taskIds[task.taskOrder]=task.id
+        for(const column of response.data) {
+          columns[column.id] = column
         }
 
         this.setState({
           ...this.state,
-          columns: columns,
-          columnOrder: columnOrder,
+          columns: columns
         })
+        this.getColumnsOrder()
       },
       error => {
         console.log(error)
       }
     )
   }
+  getColumnsOrder(){
+    axios.get('http://localhost:5000/api/columnsorder').then(
+      response => {
+        const columnOrder = response.data.order
+        this.setState({
+          ...this.state,
+          columnOrder
+        })
+        console.log(columnOrder)
+      },
+      error => {
+        console.log(error)
+      }
+  )}
 
-  componentDidMount() {
+  componentDidMount(){
     this.getTasks()
   }
 // clear the index when the drag finish 
@@ -103,6 +107,12 @@ class App extends Component {
       }
 
       this.setState(newState)
+
+      axios.put("http://localhost:5000/api/columns", {
+        id: start.id,
+        taskIds: newTaskIds,
+      })
+
       return;
     }
 
@@ -140,7 +150,16 @@ class App extends Component {
       }       
     }
     this.setState(newState);
-    console.log("task after dragging: ", newState.tasks[draggableId])
+    
+    axios.put("http://localhost:5000/api/columns", {
+      id: newStart.id,
+      taskIds: newStart.taskIds,
+    })
+    axios.put("http://localhost:5000/api/columns", {
+      id: newFinish.id,
+      taskIds: newFinish.taskIds
+    })
+
   }
 
   render(){
