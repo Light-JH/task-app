@@ -17,13 +17,10 @@ export default class Task extends React.Component {
     render(){
         const {task} = this.props
         const taskDragId = task.id.toString()
-        const isDragDisabled = this.props.task.id ==='task-1';
-
         return (
             <Draggable 
                 draggableId={taskDragId} 
                 index={this.props.index}
-                isDragDisabled={isDragDisabled}
             >
                 {(provided, snapshot)=>(
                     <Container
@@ -31,13 +28,19 @@ export default class Task extends React.Component {
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
                         isDragging={snapshot.isDragging}
-                        isDragDisabled={isDragDisabled}
                         >
-                          {task.content}
+                            <div>
+                                {task.content}
+                                <button onClick={this.onRemoveButtonClick}>-</button>
+                            </div>
                     </Container>
                 )}
             </Draggable>
             
         )
+    }
+
+    onRemoveButtonClick = () => {
+        this.props.removeTask(this.props.task.id)
     }
 }

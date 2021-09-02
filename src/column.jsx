@@ -20,14 +20,20 @@ const TaskList = styled.div`
     background-color:${props => (props.isDraggingOver ? 'skyblue' : 'white')};
     felx-grow: 1;
     min-height: 100px;`;
-    
+
+const AddTaskContainer = styled.div`
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: white;
+`;
 
 
 export default class Column extends React.Component {
     render(){
-        const {column, isDropDisabled} =this.props
+        const {column, isDropDisabled} = this.props
         const columnDroppableId = column.id.toString()
-        console.log(columnDroppableId,column.id)
         return (
             <Container>
                 <Title>{column.title}</Title>
@@ -35,18 +41,31 @@ export default class Column extends React.Component {
                 droppableId={columnDroppableId}
                 isDropDisabled={isDropDisabled}
                 >
-                    {(provided, snapshot )=> (                  
-                        <TaskList
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                            isDraggingOver={snapshot.isDraggingOver}>
+                    {(provided, snapshot )=> (
+                        <div>             
+                            <TaskList
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                isDraggingOver={snapshot.isDraggingOver}>
 
-                            {this.props.tasks.map((task, index) => <Task key={task.id} task={task} index={index}/>)}
-                            {provided.placeholder}
-                        </TaskList>
+                                {this.props.tasks.map((task, index) => <Task key={task.id} task={task} index={index} removeTask={this.removeTaskFromColumn}/>)}
+                                {provided.placeholder}
+                            </TaskList>
+                            <AddTaskContainer>
+                                <input ref={c => this.newTaskContent = c} type='text' placeholder='Add new task'/>
+                                <button onClick={this.addNewTaskToColumn}>+</button>
+                            </AddTaskContainer>
+                        </div>
                     )}
                 </Droppable>
             </Container>
         )    
+    }
+
+    addNewTaskToColumn = () => {
+        this.props.addNewTask(this.newTaskContent.value, this.props.column.id)
+    }
+    removeTaskFromColumn = (taskId) => {
+        this.props.removeTask(taskId, this.props.column.id)
     }
 }

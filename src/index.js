@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 import styled from 'styled-components'
 import { DragDropContext } from 'react-beautiful-dnd'
 import Column from './column'
+
+// Interactions with the backend go through these functions
+import { LoadTasks, CreateTask, RemoveTask } from './controllers/tasks'
+import { LoadColumns, UpdateColumn } from './controllers/columns'
+import { LoadColumnOrder} from './controllers/columnOrder'
+
+// Helper functions for modifying our state 
+import { AddToTasks, RemoveFromTasks } from './state/tasks'
+import { AddTaskToColumn, RemoveTaskFromColumn } from './state/columns';
 
 const Container = styled.div`
   display: flex;`
@@ -15,66 +23,20 @@ class App extends Component {
     columnOrder: [],
   }
 
-  getTasks() {
-    axios.get('http://localhost:5000/api/tasks').then(
-      response => {
-        const tasks = {}
-        for(const task of response.data) {
-          tasks[task.id] = task
-        }
-        console.log(tasks)
-
-        this.setState({
-          ...this.state,
-          tasks: tasks
-        })
-        this.getColumns()
-      },
-      error => {
-        console.log(error)
-      }   
-    )
+  // fetch initial data 
+  async componentDidMount() {
+    const tasks = await LoadTasks()
+    const columns = await LoadColumns()
+    const columnOrder = await LoadColumnOrder()
+    this.setState({
+      tasks: tasks,
+      columns: columns,
+      columnOrder: columnOrder
+    })
   }
 
-  getColumns() {
-    axios.get('http://localhost:5000/api/columns').then(
-      response => {
-        const columns = {}
-        for(const column of response.data) {
-          columns[column.id] = column
-        }
-
-        this.setState({
-          ...this.state,
-          columns: columns
-        })
-        this.getColumnsOrder()
-      },
-      error => {
-        console.log(error)
-      }
-    )
-  }
-  getColumnsOrder(){
-    axios.get('http://localhost:5000/api/columnsorder').then(
-      response => {
-        const columnOrder = response.data.order
-        this.setState({
-          ...this.state,
-          columnOrder
-        })
-        console.log(columnOrder)
-      },
-      error => {
-        console.log(error)
-      }
-  )}
-
-  componentDidMount(){
-    this.getTasks()
-  }
-// clear the index when the drag finish 
-  onDragEnd=result=>{
+  // clear the index when the drag finish 
+  onDragEnd = async (result) => {
     const {source, destination, draggableId} = result;
 
     if(!destination) {return}
@@ -107,11 +69,7 @@ class App extends Component {
       }
 
       this.setState(newState)
-
-      axios.put("http://localhost:5000/api/columns", {
-        id: start.id,
-        taskIds: newTaskIds,
-      })
+      await UpdateColumn(newColumn)
 
       return;
     }
@@ -150,32 +108,53 @@ class App extends Component {
       }       
     }
     this.setState(newState);
-    
-    axios.put("http://localhost:5000/api/columns", {
-      id: newStart.id,
-      taskIds: newStart.taskIds,
-    })
-    axios.put("http://localhost:5000/api/columns", {
-      id: newFinish.id,
-      taskIds: newFinish.taskIds
-    })
 
+    await UpdateColumn(newStart)
+    await UpdateColumn(newFinish)
+  }
+
+  onNewTaskAdded = async (content, columnId) => {
+    // Create a new task on backend
+    const task = await CreateTask(content)
+
+    // Update tasks and columns states
+    const newTasks = AddToTasks(this.state.tasks, task)
+    const newColumns = AddTaskToColumn(this.state.columns, columnId, task.id)
+
+    // Update column on backend
+    await UpdateColumn(newColumns[columnId])
+
+    // Update state
+    this.setState({...this.state, tasks: newTasks, columns: newColumns})
+  }
+
+  onTaskRemoved = async (taskId, columnId) => {
+    // Remove from backend
+    await RemoveTask(taskId)
+
+   // Update tasks and columns states
+   const newTasks = RemoveFromTasks(this.state.tasks, taskId)
+   const newColumns = RemoveTaskFromColumn(this.state.columns, columnId, taskId)
+
+   // Update column on backend
+   await UpdateColumn(newColumns[columnId])
+
+   // Update state
+   this.setState({...this.state, tasks: newTasks, columns: newColumns})
   }
 
   render(){
     return (
       <DragDropContext 
         onDragStart={this.onDragStart}
-        onDragEnd={this.onDragEnd}>
-          
+        onDragEnd={this.onDragEnd}>         
           <Container>
             {this.state.columnOrder.map((columnId) => {
               const column = this.state.columns[columnId];
               const tasks = column.taskIds.map(taskId => this.state.tasks[taskId]);
-              return (<Column key={column.id} column={column} tasks={tasks}/>);       
+              return (<Column key={column.id} column={column} tasks={tasks} addNewTask={this.onNewTaskAdded} removeTask={this.onTaskRemoved}/>);       
             })}
           </Container>
-          
       </DragDropContext>
     )
   }
