@@ -22,23 +22,3 @@
     flex-grow: 1;
     min-height: 100px
 }
-
-.addTaskContainer{
-    border: 1px solid lightgrey;
-    border-radius: 2px;
-    padding: 8px;
-    margin-bottom: 8px;
-    background-color: white;
-    flex-grow: 1;
-}
-
-.addTaskButton {
-    color: #fff;
-    background-color: lightgreen;
-    border: 1px solid green;
-    float: right;
-}
-
-.addTaskButton:hover {
-    background-color: rgb(20, 245, 20);
-}

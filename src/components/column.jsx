@@ -1,12 +1,12 @@
 import React from 'react'
 import { Droppable } from 'react-beautiful-dnd'
 import Task from './task'
+import TaskAdder from './taskAdder'
 import './column.css'
 
 export default class Column extends React.Component {
-    addNewTaskToColumn = () => {
-        this.props.addNewTask(this.newTaskContent.value, this.props.column.id)
-        this.newTaskContent.value = ""
+    addNewTaskToColumn = (content) => {
+        this.props.addNewTask(content, this.props.column.id)
     }
 
     removeTaskFromColumn = (taskId) => {
@@ -33,10 +33,7 @@ export default class Column extends React.Component {
                                 }
                                 {provided.placeholder}
                             </div>
-                            <div className="addTaskContainer">
-                                <input ref={c => this.newTaskContent = c} type='text' placeholder='Add new task'/>
-                                <button className="addTaskButton" onClick={this.addNewTaskToColumn}> + </button>
-                            </div>
+                            <TaskAdder addNewTaskToColumn={this.addNewTaskToColumn} />
                         </div>
                     )}
                 </Droppable>
