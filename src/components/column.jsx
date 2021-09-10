@@ -15,19 +15,15 @@ export default class Column extends React.Component {
     }
 
     render(){
-        const {column, isDropDisabled} = this.props
+        const {column} = this.props
         const columnDroppableId = column.id.toString()
         return (
             <div className="columnContainer">
                 <h3 className="columnTitle">{column.title}</h3>
-                <Droppable 
-                droppableId={columnDroppableId}
-                isDropDisabled={isDropDisabled}
-                >
-                    {(provided, snapshot )=> (
+                <Droppable droppableId={columnDroppableId}>
+                    {(provided) => (
                         <div>             
-                            <div className="taskList" ref={provided.innerRef} {...provided.droppableProps} 
-                                                            isDraggingOver={snapshot.isDraggingOver}>
+                            <div className="taskList" ref={provided.innerRef} {...provided.droppableProps}>
                                 {this.props.tasks.map((task, index) => 
                                 <Task key={task.id} task={task} index={index} removeTask={this.removeTaskFromColumn}/> )
                                 }
