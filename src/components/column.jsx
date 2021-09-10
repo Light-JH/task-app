@@ -21,18 +21,16 @@ export default class Column extends React.Component {
             <div className="columnContainer">
                 <h3 className="columnTitle">{column.title}</h3>
                 <Droppable droppableId={columnDroppableId}>
-                    {(provided) => (
-                        <div>             
-                            <div className="taskList" ref={provided.innerRef} {...provided.droppableProps}>
-                                {this.props.tasks.map((task, index) => 
+                    {(provided) => (           
+                        <div className="taskList" ref={provided.innerRef} {...provided.droppableProps}>
+                            {this.props.tasks.map((task, index) => 
                                 <Task key={task.id} task={task} index={index} removeTask={this.removeTaskFromColumn}/> )
-                                }
-                                {provided.placeholder}
-                            </div>
-                            <TaskAdder addNewTaskToColumn={this.addNewTaskToColumn} />
+                            }
+                            {provided.placeholder}
                         </div>
                     )}
                 </Droppable>
+                <TaskAdder addNewTaskToColumn={this.addNewTaskToColumn} />
             </div>
         )    
     }
