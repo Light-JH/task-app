@@ -1,0 +1,18 @@
+.taskContainer{ 
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: white;
+}
+
+.deleteTaskButton {
+    color: #fff;
+    background-color:chocolate ;
+    border: 1px solid #2f7dbd;
+    float: right;
+}
+
+.deleteTaskButton:hover {
+    background-color: #bd362f;
+}

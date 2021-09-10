@@ -1,10 +1,9 @@
-// OnLoaded:
+import axios from "axios"
+
+// LoadTasks:
 // 1. Sends request to backend
 // 2. Once it receives the response, get tasks from .data
 // 3. Return task map
-import axios from "axios"
-
-// 3. Call the 'onLoaded' callback with the tasks map
 export async function LoadTasks() {
     const res = await axios.get('http://localhost:5000/api/tasks');
     const tasks = {}

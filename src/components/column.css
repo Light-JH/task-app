@@ -1,0 +1,44 @@
+.columnContainer{
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+}
+    
+.columnTitle{
+    padding: 8px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.taskList{
+    transition:background-color 0.2s ease;
+    /* background-color: ${props => (
+        props.isDragDisabled ? 'lightgrey' : props.isDragging ? 'lightgreen' : 'white'
+        )}; */
+    flex-grow: 1;
+    min-height: 100px
+}
+
+.addTaskContainer{
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: white;
+    flex-grow: 1;
+}
+
+.addTaskButton {
+    color: #fff;
+    background-color: lightgreen;
+    border: 1px solid green;
+    float: right;
+}
+
+.addTaskButton:hover {
+    background-color: rgb(20, 245, 20);
+}
