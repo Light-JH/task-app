@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export async function LoadColumns(onLoaded) {
+export async function LoadColumns() {
     const res = await axios.get('http://localhost:5000/api/columns')
     const columns = {}
     for (const column of res.data) {
