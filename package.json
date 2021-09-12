@@ -4,11 +4,15 @@
   "description": "",
   "main": "",
   "scripts": {
-    "client": "npm start --prefix Frontend"
+    "server": "npm start --prefix Backend",
+    "dev-server": "npm run dev-start --prefix Backend",
+    "client": "npm start --prefix Frontend",
+    "dev": "concurrently \"npm run dev-server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "concurrently": "^6.2.1"
+  }
 }

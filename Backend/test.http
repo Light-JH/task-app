@@ -1,0 +1,92 @@
+@url=http://localhost:5000/api
+@json=Content-type:application/json
+
+###
+get {{url}}/tasks
+
+###
+post {{url}}/tasks
+{{json}}
+
+{
+    "content": "Have a run"
+}
+
+###
+put {{url}}/tasks
+{{json}}
+
+{
+    "id":"612bf433c4b19bc102b7c70f",
+    "content": "Watch a movie"
+}
+
+###
+delete {{url}}/tasks
+{{json}}
+
+{
+    "id": "612bf3d4c4b19bc102b7c70c"
+}
+
+###
+get {{url}}/columns
+
+
+###
+post {{url}}/columns
+{{json}}
+
+{
+    "title": "TO DO"
+}
+
+###
+post {{url}}/columns
+{{json}}
+
+{
+    "title": "IN PROGRESS",
+    "taskIds": ["612bf3d4c4b19bc102b7c70c", "612bf433c4b19bc102b7c70f", "612bf447c4b19bc102b7c711"]
+}
+
+###
+put {{url}}/columns
+{{json}}
+
+{
+    "id": "612bf8685a60f9600b9121dc",
+    "title": "IN PROGRESS"
+}
+
+###
+put {{url}}/columns
+{{json}}
+
+{
+    "id": "612bf7d95a60f9600b9121d8",
+    "taskIds": []
+}
+
+###
+get {{url}}/columnsorder
+
+###
+put {{url}}/columnsorder
+{{json}}
+
+
+    {"order":["612bf8685a60f9600b9121dc", "612bf7d95a60f9600b9121d8"]}
+
+
+
+
+
+
+
+
+
+
+
+
+
